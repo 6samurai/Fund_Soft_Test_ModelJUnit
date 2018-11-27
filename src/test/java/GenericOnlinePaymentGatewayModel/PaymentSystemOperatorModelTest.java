@@ -69,6 +69,122 @@ public class PaymentSystemOperatorModelTest implements  FsmModel {
         Assert.assertEquals("The model's offline Verified state doesn't match the SUT's state.", offVerif, sut.isOfflineVerified());
     }
 
+    public boolean invalidAuthGuard() {
+        return getState().equals(PaymentSystemOperatorStates.OFFLINE_VERIF);
+    }
+    public @Action void invalidAuth() {
+        sut.invalidAuth();
+        idle = true;
+        offVerif = false;
+        auth = false;
+        modelState = PaymentSystemOperatorStates.IDLE;
+
+        Assert.assertEquals("The model's idle state doesn't match the SUT's state.", idle, sut.isIdle());
+        Assert.assertEquals("The model's offline Verified state doesn't match the SUT's state.", offVerif, sut.isOfflineVerified());
+        Assert.assertEquals("The model's authorised state doesn't match the SUT's state.", auth, sut.isAuthorised());
+    }
+
+    public boolean validAuthGuard() {
+        return getState().equals(PaymentSystemOperatorStates.OFFLINE_VERIF);
+    }
+    public @Action void validAuth() {
+        sut.validAuth();
+        idle = false;
+        offVerif = true;
+        auth = true;
+        modelState = PaymentSystemOperatorStates.AUTH;
+
+        Assert.assertEquals("The model's idle state doesn't match the SUT's state.", idle, sut.isIdle());
+        Assert.assertEquals("The model's offline Verified state doesn't match the SUT's state.", offVerif, sut.isOfflineVerified());
+        Assert.assertEquals("The model's authorised state doesn't match the SUT's state.", auth, sut.isAuthorised());
+    }
+
+
+    public boolean voidCaptureGuard() {
+        return getState().equals(PaymentSystemOperatorStates.AUTH);
+    }
+    public @Action void voidCapture() {
+        sut.voidOperation();
+        voided = true;
+        modelState = PaymentSystemOperatorStates.VOID;
+
+        Assert.assertEquals("The model's void state doesn't match the SUT's state.", voided, sut.isVoid());
+    }
+
+    public boolean invalidCaptureGuard() {
+        return getState().equals(PaymentSystemOperatorStates.AUTH);
+    }
+    public @Action void invalidCapture() {
+        sut.invalidCapture();
+        idle = true;
+        offVerif = false;
+        auth = false;
+        capture = false;
+        modelState = PaymentSystemOperatorStates.IDLE;
+
+        Assert.assertEquals("The model's idle state doesn't match the SUT's state.", idle, sut.isIdle());
+        Assert.assertEquals("The model's offline Verified state doesn't match the SUT's state.", offVerif, sut.isOfflineVerified());
+        Assert.assertEquals("The model's authorised state doesn't match the SUT's state.", auth, sut.isAuthorised());
+        Assert.assertEquals("The model's capture state doesn't match the SUT's state.", capture, sut.isCaptured());
+    }
+
+    public boolean validCaptureGuard() {
+        return getState().equals(PaymentSystemOperatorStates.AUTH);
+    }
+    public @Action void validCapture() {
+        sut.validCapture();
+        idle = false;
+        offVerif = true;
+        auth = true;
+        capture = true;
+        modelState = PaymentSystemOperatorStates.CAPUTRE;
+
+        Assert.assertEquals("The model's idle state doesn't match the SUT's state.", idle, sut.isIdle());
+        Assert.assertEquals("The model's offline Verified state doesn't match the SUT's state.", offVerif, sut.isOfflineVerified());
+        Assert.assertEquals("The model's authorised state doesn't match the SUT's state.", auth, sut.isAuthorised());
+          Assert.assertEquals("The model's capture state doesn't match the SUT's state.", capture, sut.isCaptured());
+    }
+
+    public boolean invalidRefundGuard() {
+        return getState().equals(PaymentSystemOperatorStates.CAPUTRE);
+    }
+    public @Action void invalidRefund() {
+        sut.invalidRefund();
+        idle = true;
+        offVerif = false;
+        auth = false;
+        capture = false;
+        refund = false;
+        modelState = PaymentSystemOperatorStates.IDLE;
+
+        Assert.assertEquals("The model's idle state doesn't match the SUT's state.", idle, sut.isIdle());
+        Assert.assertEquals("The model's offline Verified state doesn't match the SUT's state.", offVerif, sut.isOfflineVerified());
+        Assert.assertEquals("The model's authorised state doesn't match the SUT's state.", auth, sut.isAuthorised());
+        Assert.assertEquals("The model's capture state doesn't match the SUT's state.", capture, sut.isCaptured());
+        Assert.assertEquals("The model's refund state doesn't match the SUT's state.", refund, sut.isRefunded());
+
+    }
+
+    public boolean validRefundGuard() {
+        return getState().equals(PaymentSystemOperatorStates.CAPUTRE);
+    }
+    public @Action void validRefund() {
+        sut.validRefund();
+        idle = false;
+        offVerif = true;
+        auth = true;
+        capture = true;
+        refund = true;
+        modelState = PaymentSystemOperatorStates.REFUND;
+
+        Assert.assertEquals("The model's idle state doesn't match the SUT's state.", idle, sut.isIdle());
+        Assert.assertEquals("The model's offline Verified state doesn't match the SUT's state.", offVerif, sut.isOfflineVerified());
+        Assert.assertEquals("The model's authorised state doesn't match the SUT's state.", auth, sut.isAuthorised());
+        Assert.assertEquals("The model's capture state doesn't match the SUT's state.", capture, sut.isCaptured());
+        Assert.assertEquals("The model's refund state doesn't match the SUT's state.", refund, sut.isRefunded());
+    }
+
+
 
     @Test
     public void TelephoneSystemModelRunner() throws FileNotFoundException {
@@ -80,7 +196,7 @@ public class PaymentSystemOperatorModelTest implements  FsmModel {
         tester.addCoverageMetric(new TransitionPairCoverage());
         tester.addCoverageMetric(new StateCoverage());
         tester.addCoverageMetric(new ActionCoverage());
-        tester.generate(250);
+        tester.generate(500);
         tester.printCoverage();
     }
 }

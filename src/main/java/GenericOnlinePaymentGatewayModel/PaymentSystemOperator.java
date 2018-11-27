@@ -11,7 +11,7 @@ public class PaymentSystemOperator {
 
     boolean isOfflineVerified() {return  offVerif;}
 
-    boolean isAuthenticated() {return  auth;}
+    boolean isAuthorised() {return  auth;}
 
     boolean isCaptured() {return  capture;}
 
@@ -43,7 +43,7 @@ public class PaymentSystemOperator {
 
     void validAuth(){
         if(offVerif && !auth && !capture && !refund && !voided && !idle){
-            offVerif = true;
+            auth = true;
         }
     }
 
@@ -55,7 +55,7 @@ public class PaymentSystemOperator {
         }
     }
 
-    void notCapturedinWeek(){
+    void voidOperation(){
         if(offVerif && auth && !capture && !refund && !voided && !idle){
             voided = true;
         }
