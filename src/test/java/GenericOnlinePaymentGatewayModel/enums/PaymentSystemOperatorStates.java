@@ -1,10 +1,10 @@
 package GenericOnlinePaymentGatewayModel.enums;
 
 public enum PaymentSystemOperatorStates {
-    IDLE,
+    INVALID,
     OFFLINE_VERIF,
     AUTH,
     VOID,
-    CAPUTRE,
+    CAPTURE,
     REFUND
 }

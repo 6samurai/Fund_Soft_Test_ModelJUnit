@@ -7,7 +7,7 @@ public class PaymentSystemOperator {
     private  boolean capture = false;
     private  boolean refund = false;
     private  boolean voided = false;
-    private  boolean idle = true;
+    private  boolean invalid = true;
 
     boolean isOfflineVerified() {return  offVerif;}
 
@@ -19,66 +19,73 @@ public class PaymentSystemOperator {
 
     boolean isVoid() {return  voided;}
 
-    boolean isIdle() {return  idle;}
-    //
-    void validOfflineVerif(){
-        if(!offVerif && !auth && !capture && !refund && !voided && idle){
-            offVerif = true;
-            idle = false;
-        }
-    }
+    boolean isInvalid() {return  invalid;}
+
 
     void invalidOfflineVerif(){
-        if(!offVerif && !auth && !capture && !refund && idle){
+        if(!offVerif && invalid){
             offVerif = false;
         }
     }
 
+    void validOfflineVerif(){
+        if(!offVerif && invalid){
+            offVerif = true;
+            invalid = false;
+        }
+    }
+
+
     void invalidAuth(){
-        if(offVerif && !auth && !capture && !refund && !voided && !idle){
+        if(offVerif && !auth && !invalid){
             offVerif = false;
-            idle = true;
+            invalid = true;
         }
     }
 
     void validAuth(){
-        if(offVerif && !auth && !capture && !refund && !voided && !idle){
+        if(offVerif && !auth && !invalid){
             auth = true;
         }
     }
 
-    void invalidCapture(){
-        if(offVerif && auth && !capture && !refund && !voided && !idle){
-            offVerif = false;
-            auth = false;
-            idle = true;
-        }
-    }
-
     void voidOperation(){
-        if(offVerif && auth && !capture && !refund && !voided && !idle){
+        if(offVerif && auth && !voided && !invalid ){
             voided = true;
         }
     }
 
+
+
+    void invalidCapture(){
+        if(offVerif && auth  && !invalid){
+            offVerif = false;
+            auth = false;
+            invalid = true;
+        }
+    }
+
     void validCapture(){
-        if(offVerif && auth && !capture && !refund && !voided && !idle){
+        if(offVerif && auth && !capture && !voided  && !invalid ){
             capture = true;
         }
     }
 
     void invalidRefund(){
-        if(offVerif && auth && capture && !refund && !voided && !idle){
+        if(offVerif && auth && capture && !voided  && !invalid){
             offVerif = false;
             auth = false;
             capture = false;
-            idle = true;
+            invalid = true;
         }
     }
 
     void validRefund(){
-        if(offVerif && auth && capture && !refund && !voided && !idle){
+        if(offVerif && auth && capture && !refund  && !invalid && !voided){
             refund = true;
+
         }
     }
+
+
 }
